@@ -1,4 +1,4 @@
-# 📦 @vanilla/helper
+# 📦 vanilla-helper
 
 vanilla js helper library.
 
@@ -6,5 +6,5 @@ vanilla js helper library.
 ## ⚡Using 
 
 ```
-import { DomHandler, EventBus, ObjectUtils, Http, getUrlParam, getUrlParams } from "@vanilla/helper";
+import { DomHandler, EventBus, ObjectUtils, Http, getUrlParam, getUrlParams } from "vanilla-helper";
 ```
