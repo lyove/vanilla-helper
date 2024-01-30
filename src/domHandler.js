@@ -34,6 +34,10 @@ export default class DomHandler {
     return 0;
   }
 
+  static hasDOM() {
+    return !!(typeof window !== "undefined" && window.document && window.document.createElement);
+  }
+  
   static getBrowserLanguage() {
     return (
       navigator.userLanguage ||
@@ -164,7 +168,9 @@ export default class DomHandler {
       let num = 0;
 
       for (let i = 0; i < children.length; i++) {
-        if (children[i] === element) return num;
+        if (children[i] === element) {
+          return num;
+        }
         if (children[i].nodeType === 1) num++;
       }
     }
@@ -860,7 +866,7 @@ export default class DomHandler {
     };
   }
 
-  static isVisible(element) {
+  static isElementVisible(element) {
     // https://stackoverflow.com/a/59096915/502366 (in future use IntersectionObserver)
     return (
       element &&
@@ -870,17 +876,13 @@ export default class DomHandler {
     );
   }
 
-  static isExist(element) {
+  static isElementExist(element) {
     return !!(
       element !== null &&
       typeof element !== "undefined" &&
       element.nodeName &&
       element.parentNode
     );
-  }
-
-  static hasDOM() {
-    return !!(typeof window !== "undefined" && window.document && window.document.createElement);
   }
 
   static getFocusableElements(element, selector = "") {
@@ -926,7 +928,7 @@ export default class DomHandler {
    * @param {HTMLElement} el a HTML element
    * @param {boolean} scrollTo flag to control whether to scroll to the element, false by default
    */
-  static focus(el, scrollTo) {
+  static focusInputElement(el, scrollTo) {
     const preventScroll = scrollTo === undefined ? true : !scrollTo;
 
     el && document.activeElement !== el && el.focus({ preventScroll });
@@ -1130,6 +1132,40 @@ export default class DomHandler {
     return rv;
   }
 
+  /**
+   * Find all parent elements
+   */
+  static findAllParents(element) {
+    let parents = [];
+    
+    while (element.parentNode !== null) {
+        element = element.parentNode;
+        
+        if (!parents.includes(element)) {
+            parents.push(element);
+        }
+    }
+    
+    return parents;
+  }
+
+  /**
+   * Find all children elements
+   */
+  static findAllChildren(element) {
+    let children = Array.from(element.childNodes).filter((node) => node instanceof Element || node.textContent.trim() !== "");
+    
+    for (let i = 0; i < children.length; i++) {
+        let child = children[i];
+        
+        if (child.hasChildNodes()) {
+            children = children.concat(Array.from(child.childNodes).filter((node) => node instanceof Element || node.textContent.trim() !== ""));
+        }
+    }
+    
+    return children;
+  }
+  
   /**
    * Compare two elements for equality.  Even will compare if the style element
    * is out of order for example:
